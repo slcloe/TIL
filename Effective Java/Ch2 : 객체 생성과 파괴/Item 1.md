@@ -6,7 +6,7 @@
   ```java
   public ClassName (boolean b)
   ```  
-  3) static factory method  
+  2) static factory method  
   ```java
   public static Boolean valueOf(boolean b)
   ```
@@ -19,13 +19,13 @@
 
 #### 1. 이름으로 객체의 특성을 쉽게 묘사할 수 있다.
  
-	ex) BigInteger vs BigInteger.probablePrime
+	ex) BigInteger vs BigInteger.probablePrime  
 
   
 #### 2. 인스턴스의 라이프 사이클을 통제할 수 있다.
    
    > **인스턴스 통제 클래스**란?  
-   >  언제 어느 인스턴스를 살아 있게 할지를 철저히 통제
+   >  언제 어느 인스턴스를 살아 있게 할지를 철저히 통제  
 
    싱글톤 패턴 가능, 인스턴스화 불가  
    동치인 인스턴스가 단 하나뿐 임을 보장할 수 있다.  
