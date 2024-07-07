@@ -70,19 +70,3 @@ public class Teenager {
 => System.exit을 호출할 때 cleaner 동작 여부는 보장하지 않는다.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
