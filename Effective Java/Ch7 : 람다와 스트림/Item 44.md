@@ -5,13 +5,13 @@
 
 //1. 재정의
 protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-  return size() > 100;
+	return size() > 100;
 }
 
 // 함수인터페이스 사용
 @FunctionalInterface
 interface EldestEntryRemovalFunction<K, V> {
-  boolean remove(Map<K, V> map, Map.Entry<K, V> eldest);
+	boolean remove(Map<K, V> map, Map.Entry<K, V> eldest);
 }
 
 // 표준 함수형 인터페이스 사용
@@ -59,14 +59,6 @@ BiPredicate<Map<K, V>, Map.Entry<K, V>>
 	* 올바른 메서드를 알려주기 위한 형변환이 필요할 수 있다.
 
 
-```java
-
-``` 
-
-
-```java
-
-``` 
 <!-- 
 ```java
 
