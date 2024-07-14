@@ -6,8 +6,9 @@
 ```java
 Map<String, Long> freq = new HashMap<>();
 try (Stream<String> words = new Scanner(file).tokens()) {
-words.forEach(word -> {
-freq.merge(word.toLowerCase(), 1L, Long::sum); });
+	words.forEach(word -> { 
+		freq.merge(word.toLowerCase(), 1L, Long::sum); 
+	});
 }
 ``` 
 * for-Each 는 스트림이 수행한 연산 결과를 보여주는 일만 수행해야하지만
@@ -23,8 +24,8 @@ freq.merge(word.toLowerCase(), 1L, Long::sum); });
 ```java
 Map<String, Long> freq;
 try (Stream<String> words = new Scanner(file).tokens()) {
-freq = words
-.collect(groupingBy(String::toLowerCase, counting()));
+	freq = words
+	.collect(groupingBy(String::toLowerCase, counting()));
 }
 ``` 
 * for-each 연산은 스트림의 계산 결과를 보고할 때만 사용해야한다. ( 종단 연산에만 사용하자 )
@@ -32,8 +33,10 @@ freq = words
 
 ##### 적절한 스트림 활용법
 ```java
-List<String> topTen = freq.keySet().stream().sorted(comparing(freq::get).reversed()) .limit(10)
-.collect(toList());
+List<String> topTen = freq.keySet().stream()
+							.sorted(comparing(freq::get)
+							.reversed()).limit(10)
+							.collect(toList());
 ``` 
 * `comparing(freq::get).reversed()`
 	* comparing : 키 추출 함수를 받는 비교자 생성 메서드
@@ -44,8 +47,7 @@ List<String> topTen = freq.keySet().stream().sorted(comparing(freq::get).reverse
 
 #### toMap (인수 2개)
 ```java
-private static final Map<String, Operation> stringToEnum = Stream.of(values()).collect(
-toMap(Object::toString, e -> e));
+private static final Map<String, Operation> stringToEnum = Stream.of(values()).collect(toMap(Object::toString, e -> e));
 ``` 
 * 스트림의 각 원소가 고유한 키에 매핑되어 있을 때 적합하다.
 * 스트림 원소 키가 충돌된다면 IllegalStateException을 던진다.
@@ -53,8 +55,7 @@ toMap(Object::toString, e -> e));
 
 #### toMap (인수 3개)
 ```java
-Map<Artist, Album> topHits = albums.collect(
-toMap(Album::artist, a->a, maxBy(comparing(Album::sales))));
+Map<Artist, Album> topHits = albums.collect(toMap(Album::artist, a->a, maxBy(comparing(Album::sales))));
 ``` 
 * 첫번째 인자 - Key, 두번째 인자 - value,
 * 세번째 인자 - 선택할 값의 로직
@@ -83,18 +84,22 @@ words.collect(groupingBy(word -> alphabetize(word)))
 Map<Boolean, List<String>> partitioningByMap = 
 	words.stream() 
 	.collect(partitioningBy((word) -> word.equals("stop")));
+
 System.out.println("partitioningByMap = " + partitioningByMap);
 ``` 
 * stop 은 true 로 나머지는 false로 결과값이 도출된다.
 
 #### 숫자 집계 메서드들 
-	int sumOfScore = students.stream()
+```java
+int sumOfScore = students.stream()
     					.collect(summingInt(Student::score));
-    double averageOfScore = students.stream()
-                                    .collect(averagingInt(Student::score));
-    IntSummaryStatistics intSummaryOfScore = students.stream()
-                                                     .collect(summarizingInt((s) -> s.score));
+double averageOfScore = students.stream()
+								.collect(averagingInt(Student::score));
+IntSummaryStatistics intSummaryOfScore = students.stream()
+										.collect(summarizingInt((s) -> s.score));
 
+``` 
+	
 #### Joining
 * joining(delimeter)
 ```java
@@ -106,6 +111,7 @@ food.add("치킨");
 String collect = food.stream().collect(joining(" 그리고 "));
 System.out.println("collect = " + collect);
 
+//결과
 collect = 피자 그리고 햄버거 그리고 치킨
 ``` 
 
@@ -116,10 +122,11 @@ List<String> food = new ArrayList<>();
     food.add("햄버거");
     food.add("치킨");
 
-String collect = food.stream().collect(
-		joining(", ", "맛있는 ", "이 좋아"));
+String collect = food.stream().collect(joining(", ", "맛있는 ", "이 좋아"));
 
 System.out.println("collect = " + collect);
+
+//결과
 collect = 맛있는 피자, 햄버거, 치킨이 좋아
 ``` 
 
