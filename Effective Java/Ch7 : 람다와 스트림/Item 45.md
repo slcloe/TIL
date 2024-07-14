@@ -23,17 +23,28 @@
 ##### 스트림을 사용하지 않았을 때
 ```java
 public class Anagrams {
-public static void main(String[] args) throws IOException {
-File dictionary = new File(args[0]);
-int minGroupSize = Integer.parseInt(args[1]);
-Map<String, Set<String>> groups = new HashMap<>(); try (Scanner s = new Scanner(dictionary)) {
-while (s.hasNext()) { String word = s.next();
-groups.computeIfAbsent(alphabetize(word), (unused) -> new TreeSet<>()).add(word);
-} }
-for (Set<String> group : groups.values()) if (group.size() >= minGroupSize)
-private static String alphabetize(String s) { char[] a = s.toCharArray(); Arrays.sort(a);
-return new String(a);
-} }
+	public static void main(String[] args) throws IOException {
+		File dictionary = new File(args[0]);
+		int minGroupSize = Integer.parseInt(args[1]);
+
+		Map<String, Set<String>> groups = new HashMap<>(); 
+		try (Scanner s = new Scanner(dictionary)) {
+			while (s.hasNext()) { 
+				String word = s.next();
+				groups.computeIfAbsent(alphabetize(word), 
+					(unused) -> new TreeSet<>()).add(word);
+			} 
+		}
+		for (Set<String> group : groups.values()) 
+			if (group.size() >= minGroupSize)
+				System.out.println(group.size() + ": " + group);
+	}
+	private static String alphabetize(String s) { 
+		char[] a = s.toCharArray(); 
+		Arrays.sort(a);
+		return new String(a);
+	} 
+}
 ``` 
 * computeIfAbsent()를 사용하여 맵 안에 키가 있는지 찾은 다음,
 	* 있으면, 키에 매핑된 값을 반환
@@ -42,34 +53,45 @@ return new String(a);
 ##### 스트림을 과하게 사용했을 때
 ```java
 public class Anagrams {
-public static void main(String[] args) throws IOException {
-Path dictionary = Paths.get(args[0]);
-int minGroupSize = Integer.parseInt(args[1]);
-try (Stream<String> words = Files.lines(dictionary)) { words.collect(
-groupingBy(word -> word.chars().sorted() .collect(StringBuilder::new,
-(sb, c) -> sb.append((char) c), StringBuilder::append).toString()))
-.values().stream()
-.filter(group -> group.size() >= minGroupSize)
-.map(group -> group.size() + ": " + group)
-.forEach(System.out::println); }
-} }
+	public static void main(String[] args) throws IOException {
+		Path dictionary = Paths.get(args[0]);
+		int minGroupSize = Integer.parseInt(args[1]);
+
+		try (Stream<String> words = Files.lines(dictionary)) {
+			words.collect(
+				groupingBy(word -> word.chars().sorted()
+							.collect(StringBuilder::new, 
+							(sb, c) -> sb.append((char) c), StringBuilder::append).toString()))
+			.values().stream()
+			.filter(group -> group.size() >= minGroupSize)
+			.map(group -> group.size() + ": " + group)
+			.forEach(System.out::println); 
+		}
+	} 
+}
 ``` 
 * 스트림을 과용하면 읽기 힘들고, 유지보수도 힘들다.
 
 ##### 스트림을 적절히 사용했을 때
 ```java
 public class Anagrams {
-public static void main(String[] args) throws IOException {
-Path dictionary = Paths.get(args[0]);
-int minGroupSize = Integer.parseInt(args[1]);
-try (Stream<String> words = Files.lines(dictionary)) { words.collect(groupingBy(word -> alphabetize(word)))
-} }
-.values().stream()
-.filter(group -> group.size() >= minGroupSize) .forEach(g -> System.out.println(g.size() + ": " + g));
-// alphabetize 메서드는 코드 45-1과 같다. 
-private static String alphabetize(String s) { char[] a = s.toCharArray(); Arrays.sort(a);
-return new String(a);
-}
+	public static void main(String[] args) throws IOException {
+		Path dictionary = Paths.get(args[0]);
+		int minGroupSize = Integer.parseInt(args[1]);
+		
+		try (Stream<String> words = Files.lines(dictionary)) {
+			words.collect(groupingBy(word -> alphabetize(word)))
+			.values().stream()
+			.filter(group -> group.size() >= minGroupSize) 
+			.forEach(g -> System.out.println(g.size() + ": " + g));
+		} 
+	}
+	
+	private static String alphabetize(String s) { 
+		char[] a = s.toCharArray(); 
+		Arrays.sort(a);
+		return new String(a);
+	}
 }
 ``` 
 * 람다에서는 이름을 자주 생략하므로 매개 변수의 이름을 잘 지어야한다.
@@ -99,12 +121,14 @@ return new String(a);
 
 ```java
 static Stream<BigInteger> primes() {
-return Stream.iterate(TWO, BigInteger::nextProbablePrime); }
+	return Stream.iterate(TWO, BigInteger::nextProbablePrime); 
+}
 
 public static void main(String[] args) {
-primes().map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
-.filter(mersenne -> mersenne.isProbablePrime(50)) .limit(20)
-.forEach(System.out::println);
+	primes().map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
+			.filter(mersenne -> mersenne.isProbablePrime(50))
+			.limit(20)
+			.forEach(System.out::println);
 }
 ```
 * 10개의 메르센 소수를 구하는 코드
@@ -116,15 +140,20 @@ primes().map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
 #### 데카르트 예제로 살펴보자
 * 반복문 구현
 ```java
-private static List<Card> newDeck() { List<Card> result = new ArrayList<>(); for (Suit suit : Suit.values())
-for (Rank rank : Rank.values()) result.add(new Card(suit, rank));
-return result; }
+private static List<Card> newDeck() { 
+	List<Card> result = new ArrayList<>(); 
+	for (Suit suit : Suit.values())
+		for (Rank rank : Rank.values()) 
+			result.add(new Card(suit, rank));
+	return result; 
+}
 ``` 
 * 스트림 구현
 ```java
-private static List<Card> newDeck() { return Stream.of(Suit.values())
-.flatMap(suit -> Stream.of(Rank.values())
-.map(rank -> new Card(suit, rank))) .collect(toList());
+private static List<Card> newDeck() { 
+	return Stream.of(Suit.values())
+		.flatMap(suit -> Stream.of(Rank.values())
+		.map(rank -> new Card(suit, rank))) .collect(toList());
 }
 ``` 
 * 스트림과 반복 중 어느 족이 나은지 선택하는 규칙은 없지만, 더 이해하고, 유지보수하기 편한 쪽으로 선택해라.
