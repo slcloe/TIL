@@ -10,14 +10,15 @@
 #### parallel()의 문제점 
 ```java
 public static void main(String[] args) {
-primes()
-.parallel()
-.map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
-.filter(mersenne -> mersenne.isProbablePrime(50)) .limit(20)
-.forEach(System.out::println);
+	primes()
+	.parallel()
+	.map(p -> TWO.pow(p.intValueExact()).subtract(ONE))
+	.filter(mersenne -> mersenne.isProbablePrime(50)) .limit(20)
+	.forEach(System.out::println);
 }
 static Stream<BigInteger> primes() {
-return Stream.iterate(TWO, BigInteger::nextProbablePrime); }
+	return Stream.iterate(TWO, BigInteger::nextProbablePrime); 
+}
 ``` 
 * parallel을 호출했지만, 연산이 끝나지 않고 계속된다.
 * 스트림라이브러리가 파이프라인을 병렬화 하는 법을 찾아내지 못했기 때문!
@@ -40,11 +41,11 @@ return Stream.iterate(TWO, BigInteger::nextProbablePrime); }
 * 종단 연산
 	* 파이프 라인의 종단 방식은 병렬 수행 효율에 영향을 준다.
 	* 축소(reduction)
-		(파이프 라인에서 만들어진 모든 원소를 하나로 합친다.)
+		* (파이프 라인에서 만들어진 모든 원소를 하나로 합친다.)
 	* 완성된 형태로 제공하는 메서드 
-		ex. max, min, count, sum...
+		* ex. max, min, count, sum...
 	* 조건에 맞으면 바로 반환되는 메서드
-		ex. anyMatch, allMatch, noneMatch
+		* ex. anyMatch, allMatch, noneMatch
 	* 하지만, 가변 축소를 수행하는 Stream 의 collect는 병렬화에 적합하지 않다.
 
 ##### 스트림을 잘못 병렬화 하면?
@@ -61,8 +62,9 @@ return Stream.iterate(TWO, BigInteger::nextProbablePrime); }
 
 ```java
 static long pi(long n) {
-return LongStream.rangeClosed(2, n)
-.parallel() .mapToObj(BigInteger::valueOf) .filter(i -> i.isProbablePrime(50)) .count();
+	return LongStream.rangeClosed(2, n)
+					.parallel() .mapToObj(BigInteger::valueOf)
+					.filter(i -> i.isProbablePrime(50)).count();
 }
 ``` 
 * 이 작업은 쪼개기 쉽기 떄문에, parellel() 메서드로 약 5배 성능 향상을 이룰 수 있다.
