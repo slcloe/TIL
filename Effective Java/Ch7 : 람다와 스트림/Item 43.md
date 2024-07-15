@@ -28,11 +28,11 @@ service.execute(() -> action())
 ``` 
 
 #### 메서드 참조의 유형
-정적: `Integer::parseInt` == `str -> Integer.parseInt(str)`
-한정적 (인스턴스): `Instant.now()::isAfter` == `Instant then = Instant.now(); t -> then.isAfter(t)`
-비한정적 (인스턴스): `String::toLowerCase` == `str.toLowerCase()`
-클래스 생성자: `TreeMap<K, V>::new `== `() -> new TreeMap<K, V>()`
-배열 생성자: `int[]::new` == `len -> new int[len]`
+정적: `Integer::parseInt` == `str -> Integer.parseInt(str)`  
+한정적 (인스턴스): `Instant.now()::isAfter` == `Instant then = Instant.now(); t -> then.isAfter(t)`  
+비한정적 (인스턴스): `String::toLowerCase` == `str.toLowerCase()`  
+클래스 생성자: `TreeMap<K, V>::new `== `() -> new TreeMap<K, V>()`  
+배열 생성자: `int[]::new` == `len -> new int[len]`  
 
 
 -> 메서드 참조와 람다 중 훨씬 코드를 작성하는 편이 짧고 명확한 쪽으로 사용하자.!
