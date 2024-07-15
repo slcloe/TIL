@@ -15,20 +15,21 @@ public final class Period { private final Date start; private final Date end;
 * @param end 종료 시각. 시작 시각보다 뒤여야 한다.
 * @throws IllegalArgumentException 시작 시각이 종료 시각보다 늦을 때 발생한다.
 * @throws NullPointerException start나 end가 null이면 발생한다. */
-public Period(Date start, Date end) { if (start.compareTo(end) > 0)
-throw new IllegalArgumentException( start + " after " + end);
-this.start = start;
-this.end = end; }
-public Date start() {
-return start; }
-public Date end() {
-return end; }
+public Period(Date start, Date end) { 
+	if (start.compareTo(end) > 0)
+	throw new IllegalArgumentException( start + " after " + end);
+	this.start = start;
+	this.end = end; 
+}
+public Date start() { return start; }
+public Date end() { return end; }
 ... // 나머지 코드 생략 
 }
 
 Date start = new Date();
 Date end = new Date();
-Period p = new Period(start, end); end.setYear(78); // p의 내부를 수정했다!
+Period p = new Period(start, end); 
+end.setYear(78); // p의 내부를 수정했다!
 ```
 * private final 로 선언했지만, Date는 가변객체임을 몰랐기 때문에 문제가 생겼다.
 * 자바8 이후로는 LocalDateTime, ZoneDateTime과 같은 불변 날짜 객체를 사용하면 된다.
@@ -36,9 +37,12 @@ Period p = new Period(start, end); end.setYear(78); // p의 내부를 수정했�
 
 #### 매개변수의 방어적 복사본을 만들기
 ```java
-public Period(Date start, Date end) { this.start = new Date(start.getTime()); this.end = new Date(end.getTime());
-if (this.start.compareTo(this.end) > 0) throw new IllegalArgumentException(
-	this.start + " after " + this.end);
+public Period(Date start, Date end) { 
+	this.start = new Date(start.getTime()); 
+	this.end = new Date(end.getTime());
+	if (this.start.compareTo(this.end) > 0) 
+		throw new IllegalArgumentException(
+			this.start + " after " + this.end);
  }
 ```
 * 매개변수의 유효성을 검사하기 전에 방어적 복사본을 만든 후 이 복사본으로 유효성을 검사했다.
